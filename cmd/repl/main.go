@@ -21,18 +21,14 @@ func tryEval(expr string) {
 }
 
 func main() {
-	reader := bufio.NewReader(os.Stdin)
-	for {
+	scanner := bufio.NewScanner(os.Stdin)
+	fmt.Print("]=> ")
+	for scanner.Scan() {
+		tryEval(scanner.Text())
 		fmt.Print("]=> ")
-		text, _ := reader.ReadString('\n')
-		if len(text) == 0 {
-			fmt.Println()
-			return
-		}
-		expr := text[:len(text)-1]
-		if len(expr) == 0 {
-			continue
-		}
-		tryEval(expr)
 	}
+	if err := scanner.Err(); err != nil {
+		fmt.Fprintln(os.Stderr, "reading standard input:", err)
+	}
+	fmt.Println()
 }
