@@ -16,6 +16,9 @@ func tryEval(expr string) {
 		}
 		fmt.Println(r)
 	}()
+	if expr == "" {
+		return
+	}
 	out := lisp.Eval(lisp.Analyze(lisp.Read(expr)))
 	fmt.Println(out)
 }

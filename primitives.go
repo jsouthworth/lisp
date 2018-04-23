@@ -187,7 +187,11 @@ func Load(file Expr) Expr {
 		}
 		scanner := bufio.NewScanner(f)
 		for scanner.Scan() {
-			e.Eval(Analyze(Read(scanner.Text())))
+			text := scanner.Text()
+			if text == "" {
+				continue
+			}
+			e.Eval(Analyze(Read(text)))
 		}
 		if err := scanner.Err(); err != nil {
 			panic(err)
