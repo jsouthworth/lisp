@@ -38,7 +38,7 @@ func listToSlice(list Expr) []Sym {
 
 func isSelfEvaluating(exp Expr) bool {
 	switch exp.(type) {
-	case Float, String, Int:
+	case String, Number:
 		return true
 	default:
 		return false

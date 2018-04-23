@@ -88,32 +88,36 @@ func InitEnv() Env {
 		return List(args...)
 	}))
 	e.Define("+", Primitive(func(args ...Expr) Expr {
-		sum := args[0].(Int)
+		result := Zero().rat
+		result.Set(args[0].(Number).rat)
 		for _, a := range args[1:] {
-			sum = sum + a.(Int)
+			result = result.Add(result, a.(Number).rat)
 		}
-		return sum
+		return Num(result)
 	}))
 	e.Define("-", Primitive(func(args ...Expr) Expr {
-		diff := args[0].(Int)
+		result := Zero().rat
+		result.Set(args[0].(Number).rat)
 		for _, a := range args[1:] {
-			diff = diff - a.(Int)
+			result = result.Sub(result, a.(Number).rat)
 		}
-		return diff
+		return Num(result)
 	}))
 	e.Define("*", Primitive(func(args ...Expr) Expr {
-		result := args[0].(Int)
+		result := Zero().rat
+		result.Set(args[0].(Number).rat)
 		for _, a := range args[1:] {
-			result = result * a.(Int)
+			result = result.Mul(result, a.(Number).rat)
 		}
-		return result
+		return Num(result)
 	}))
 	e.Define("/", Primitive(func(args ...Expr) Expr {
-		result := args[0].(Int)
+		result := Zero().rat
+		result.Set(args[0].(Number).rat)
 		for _, a := range args[1:] {
-			result = result / a.(Int)
+			result = result.Quo(result, a.(Number).rat)
 		}
-		return result
+		return Num(result)
 	}))
 	e.Define("pair?", Primitive(func(args ...Expr) Expr {
 		_, ok := args[0].(pair)
@@ -123,7 +127,15 @@ func InitEnv() Env {
 		return Bool(args[0] == nil)
 	}))
 	e.Define("equal?", Primitive(func(args ...Expr) Expr {
-		return Bool(reflect.DeepEqual(args[0], args[1]))
+		switch a := args[0].(type) {
+		case Number:
+			if b, ok := args[1].(Number); ok {
+				return Bool(a.rat.Cmp(b.rat) == 0)
+			}
+			return False
+		default:
+			return Bool(reflect.DeepEqual(args[0], args[1]))
+		}
 	}))
 	return e
 }

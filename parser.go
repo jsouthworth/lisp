@@ -1,7 +1,7 @@
 package lisp
 
 import (
-	"strconv"
+	"math/big"
 	"unicode/utf8"
 )
 
@@ -126,13 +126,10 @@ func parseToken(tokens []string) (Expr, []string) {
 }
 
 func parseAtom(str string) Expr {
-	i, err := strconv.ParseInt(str, 10, 32)
-	if err == nil {
-		return Int(i)
-	}
-	f, err := strconv.ParseFloat(str, 64)
-	if err == nil {
-		return Float(f)
+	r := new(big.Rat)
+	r, ok := r.SetString(str)
+	if ok {
+		return Num(r)
 	}
 	if len(str) > 0 && str[0] == '"' {
 		if str[len(str)-1] != '"' {

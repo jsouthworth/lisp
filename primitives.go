@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
+	"math/big"
 	"os"
 )
 
@@ -61,16 +62,24 @@ func (s String) String() string {
 	return fmt.Sprintf("%q", string(s))
 }
 
-type Int int
-
-func (i Int) Eval(e Env) Expr {
-	return i
+type Number struct {
+	rat *big.Rat
 }
 
-type Float float64
+func Zero() Number {
+	return Number{rat: new(big.Rat)}
+}
 
-func (f Float) Eval(e Env) Expr {
-	return f
+func Num(rat *big.Rat) Expr {
+	return Number{rat: rat}
+}
+
+func (n Number) Eval(e Env) Expr {
+	return n
+}
+
+func (n Number) String() string {
+	return n.rat.RatString()
 }
 
 type Sym string
