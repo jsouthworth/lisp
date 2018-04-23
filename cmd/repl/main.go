@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"runtime/debug"
 
 	"github.com/jsouthworth/lisp"
 )
@@ -15,6 +16,7 @@ func tryEval(expr string) {
 			return
 		}
 		fmt.Println(r)
+		fmt.Println(string(debug.Stack()))
 	}()
 	if expr == "" {
 		return

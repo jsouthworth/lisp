@@ -124,7 +124,7 @@ func InitEnv() Env {
 		return Bool(ok)
 	}))
 	e.Define("null?", Primitive(func(args ...Expr) Expr {
-		return Bool(args[0] == nil)
+		return Bool(args[0] == Nil)
 	}))
 	e.Define("equal?", Primitive(func(args ...Expr) Expr {
 		switch a := args[0].(type) {

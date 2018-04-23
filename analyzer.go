@@ -6,13 +6,13 @@ import (
 
 func listToExprSlice(list Expr) []Expr {
 	out := []Expr{}
-	if list == nil {
+	if list == Nil {
 		return out
 	}
 	head, list := Car(list), Cdr(list)
 	for {
 		out = append(out, head)
-		if list == nil {
+		if list == Nil {
 			break
 		}
 		head, list = Car(list), Cdr(list)
@@ -22,13 +22,13 @@ func listToExprSlice(list Expr) []Expr {
 
 func listToSlice(list Expr) []Sym {
 	out := []Sym{}
-	if list == nil {
+	if list == Nil {
 		return out
 	}
 	head, list := Car(list), Cdr(list)
 	for {
 		out = append(out, head.(Sym))
-		if list == nil {
+		if list == Nil {
 			break
 		}
 		head, list = Car(list), Cdr(list)
@@ -41,6 +41,9 @@ func isSelfEvaluating(exp Expr) bool {
 	case String, Number:
 		return true
 	default:
+		if exp == Nil {
+			return true
+		}
 		return false
 	}
 }

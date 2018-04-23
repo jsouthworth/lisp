@@ -11,7 +11,17 @@ import (
 var OK = Sym("OK")
 var True Expr = Bool(true)
 var False Expr = Bool(false)
-var Nil Expr = nil
+var Nil Expr = null{}
+
+type null struct{}
+
+func (n null) Eval(e Env) Expr {
+	return n
+}
+
+func (n null) String() string {
+	return "'()"
+}
 
 type Primitive func(...Expr) Expr
 
@@ -220,7 +230,7 @@ func (c pair) String() string {
 		if tail, ok := p.tail.(pair); ok {
 			fmt.Fprintf(&buf, "%v ", p.head)
 			p = tail
-		} else if p.tail == nil {
+		} else if p.tail == Nil {
 			fmt.Fprintf(&buf, "%v", p.head)
 			break
 		} else {
@@ -248,7 +258,7 @@ func Cdr(e Expr) Expr {
 
 func List(vals ...Expr) Expr {
 	if len(vals) == 0 {
-		return nil
+		return Nil
 	}
 	return Cons(vals[0], List(vals[1:]...))
 }
