@@ -72,6 +72,9 @@ func InitEnv() Env {
 	e.Define("apply", Primitive(func(args ...Expr) Expr {
 		return e.Eval(args[0].(Applier).Apply(args[1:]...))
 	}))
+	e.Define("load", Primitive(func(args ...Expr) Expr {
+		return e.Eval(Load(args[0]))
+	}))
 	e.Define("car", Primitive(func(args ...Expr) Expr {
 		return Car(args[0])
 	}))

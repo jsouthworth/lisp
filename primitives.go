@@ -1,8 +1,10 @@
 package lisp
 
 import (
+	"bufio"
 	"bytes"
 	"fmt"
+	"os"
 )
 
 var OK = Sym("OK")
@@ -164,6 +166,24 @@ func Apply(procedure Expr, arguments ...Expr) Expr {
 			args = append(args, a.Eval(e))
 		}
 		return procedure.Eval(e).(Applier).Apply(args...)
+	})
+}
+
+func Load(file Expr) Expr {
+	return Proc(func(e Env) Expr {
+		name := string(file.(String))
+		f, err := os.Open(name)
+		if err != nil {
+			panic(err)
+		}
+		scanner := bufio.NewScanner(f)
+		for scanner.Scan() {
+			e.Eval(Analyze(Read(scanner.Text())))
+		}
+		if err := scanner.Err(); err != nil {
+			panic(err)
+		}
+		return OK
 	})
 }
 
